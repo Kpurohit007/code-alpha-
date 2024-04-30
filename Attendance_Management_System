@@ -1,0 +1,154 @@
+import java.util.*;
+
+// Define a class for a Student
+class Student {
+    private String name;
+    private int id;
+
+    public Student(String name, int id) {
+        this.name = name;
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+}
+
+// Define a class for a Course
+class Course {
+    private String name;
+    private int courseId;
+    private List<Student> students;
+
+    public Course(String name, int courseId) {
+        this.name = name;
+        this.courseId = courseId;
+        students = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void addStudent(Student student) {
+        students.add(student);
+    }
+}
+
+// Define an interface for authentication
+interface Authenticatable {
+    boolean authenticate(String username, String password);
+}
+
+// Define a class for Admin
+class Admin implements Authenticatable {
+    private String username;
+    private String password;
+
+    public Admin(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public boolean authenticate(String username, String password) {
+        return this.username.equals(username) && this.password.equals(password);
+    }
+
+    // Admin-specific methods can be added here
+}
+
+// Define a class for User
+class User implements Authenticatable {
+    private String username;
+    private String password;
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public boolean authenticate(String username, String password) {
+        return this.username.equals(username) && this.password.equals(password);
+    }
+
+    // User-specific methods can be added here
+}
+
+// Define a class for AttendanceRecord
+class AttendanceRecord {
+    private Date date;
+    private boolean[] attendance;
+
+    public AttendanceRecord(Date date, int numStudents) {
+        this.date = date;
+        attendance = new boolean[numStudents];
+        Arrays.fill(attendance, false);
+    }
+
+    public void markAttendance(int studentIndex) {
+        attendance[studentIndex] = true;
+    }
+
+    // You can add more methods for retrieving attendance data
+}
+
+// Main class for testing
+public class AttendanceManagementSystem {
+    public static void main(String[] args) {
+        // Create an Admin
+        Admin admin = new Admin("admin", "admin123");
+
+        // Create some students
+        Student student1 = new Student("John", 1);
+        Student student2 = new Student("Alice", 2);
+        Student student3 = new Student("Bob", 3);
+
+        // Create a course and add students to it
+        Course course = new Course("Java Programming", 101);
+        course.addStudent(student1);
+        course.addStudent(student2);
+        course.addStudent(student3);
+
+        // Create an attendance record for today
+        Date today = new Date();
+        AttendanceRecord attendanceRecord = new AttendanceRecord(today, course.getStudents().size());
+
+        // Mark attendance for some students
+        attendanceRecord.markAttendance(0);
+        attendanceRecord.markAttendance(2);
+
+        // Authenticate Admin
+        if (admin.authenticate("admin", "admin123")) {
+            // Admin is authenticated, perform admin tasks
+            System.out.println("Admin authenticated.");
+            // You can add admin functionalities here
+        } else {
+            System.out.println("Invalid admin credentials.");
+        }
+
+        // Authenticate User
+        User user = new User("user", "user123");
+        if (user.authenticate("user", "user123")) {
+            // User is authenticated, perform user tasks
+            System.out.println("User authenticated.");
+            // You can add user functionalities here
+        } else {
+            System.out.println("Invalid user credentials.");
+        }
+    }
+}
